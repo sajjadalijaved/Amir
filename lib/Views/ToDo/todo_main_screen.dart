@@ -1,9 +1,10 @@
 import 'package:intl/intl.dart';
-import '../../SQLite/sqlite.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/JsonModels/task_model.dart';
 import 'package:note_app/Views/ToDo/detail_todo_screen.dart';
 import 'package:note_app/Views/ToDo/add_todo_task_screen.dart';
+
+import '../../SQLite/task_sqlite.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -21,7 +22,7 @@ class ToDoMainScreen extends StatefulWidget {
 }
 
 class _ToDoMainScreenState extends State<ToDoMainScreen> {
-  late DatabaseHelper helper;
+  late DataBaseHelperTasks helper;
   late Future<List<TaskModel>> task;
 
   late TextEditingController search;
@@ -31,7 +32,7 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
     super.initState();
 
     search = TextEditingController();
-    helper = DatabaseHelper();
+    helper = DataBaseHelperTasks();
     task = helper.fetchTaskData();
 
     helper.getTaskDb().whenComplete(() {

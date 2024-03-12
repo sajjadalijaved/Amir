@@ -2,7 +2,6 @@ import 'dart:developer';
 import 'package:path/path.dart';
 import '../JsonModels/user.dart';
 import 'package:sqflite/sqflite.dart';
-import 'package:note_app/JsonModels/task_model.dart';
 import 'package:note_app/JsonModels/note_model.dart';
 
 class DatabaseHelper {
@@ -40,28 +39,7 @@ class DatabaseHelper {
     return Future.value(database);
   }
 
-  // tasks database
 
-  Future<Database> getTaskDb() async {
-    database ??= await openDatabase(
-      join(await getDatabasesPath(), databaseName),
-      onCreate: (db, version) {
-        db.execute(TaskModel.taskTableCreate);
-        log('Table created successfully');
-      },
-      onUpgrade: (db, oldVersion, newVersion) {
-        if (oldVersion != newVersion) {
-          if (oldVersion < 2) {
-            // Add a new column
-            db.execute(
-                'ALTER TABLE ${TaskModel.tasktableName} ADD COLUMN newColumn TEXT');
-          }
-        }
-      },
-      version: 2,
-    );
-    return database!;
-  }
 
   // Login user
   Future<bool> loginUser(Users user) async {
@@ -118,15 +96,7 @@ class DatabaseHelper {
     return searchResult.map((e) => NoteModel.fromMap(e)).toList();
   }
 
-  // search tasks
-  Future<List<TaskModel>> searchtasks(String search) async {
-    final Database database = await getTaskDb();
-    List<Map<String, Object?>> searchResult = await database.rawQuery(
-        "select * from ${TaskModel.tasktableName} where taskTitle LIKE ?",
-        ["%$search%"]);
-    return searchResult.map((e) => TaskModel.fromMap(e)).toList();
-  }
-
+ 
 // create notes method
   Future<bool> createNote(NoteModel note) async {
     try {
@@ -135,7 +105,7 @@ class DatabaseHelper {
         tableName,
         note.toMap(),
       );
-      log('*************************CreateNote data*******************');
+      log('*************************Create Note data*******************');
 
       if (result < 0) {
         return false;
@@ -147,25 +117,7 @@ class DatabaseHelper {
     }
   }
 
-  // create tasks method
-  Future<bool> createtask(TaskModel task) async {
-    try {
-      Database? database = await getTaskDb();
-      int result = await database.insert(
-        TaskModel.tasktableName,
-        task.toMap(task),
-      );
-      log('*************************CreateNote data*******************');
-
-      if (result < 0) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      log("insertData Error : $e");
-      return false;
-    }
-  }
+ 
 
   // Get notes
   Future<List<NoteModel>> fetchData() async {
@@ -174,13 +126,7 @@ class DatabaseHelper {
     return list.map((map) => NoteModel.fromMap(map)).toList();
   }
 
-  // Get tasks
-  Future<List<TaskModel>> fetchTaskData() async {
-    Database? database = await getTaskDb();
-    List list = await database.rawQuery(TaskModel.fetch_task);
-    return list.map((map) => TaskModel.fromMap(map)).toList();
-  }
-
+ 
   // delete one note from database
   Future<bool> daleteOneDataItem(int id) async {
     try {
@@ -198,22 +144,7 @@ class DatabaseHelper {
     }
   }
 
-  // delete one task from database
-  Future<bool> daleteOneTaskItem(int id) async {
-    try {
-      Database? database = await getTaskDb();
-      int rows = await database.delete(TaskModel.tasktableName,
-          where: 'taskId = ?', whereArgs: [id]);
 
-      if (rows < 0) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      log("daleteOneTaskItem Error : $e");
-      return false;
-    }
-  }
 
   // delete all table
   Future<bool> daleteAllData() async {
@@ -247,25 +178,5 @@ class DatabaseHelper {
   //       [task, taskId]);
   // }
 
-  Future<bool> updateTask(String taskTitle, int id) async {
-    try {
-      Database? database = await getTaskDb();
-      int rows = await database.update(
-          TaskModel.tasktableName,
-          {
-            TaskModel.key_taskTitle: taskTitle,
-          },
-          where: '${TaskModel.key_taskId} = ?',
-          whereArgs: [id]);
-      log('*************************update data*******************');
-
-      if (rows < 0) {
-        return false;
-      }
-      return true;
-    } catch (e) {
-      log("update Error : $e");
-      return false;
-    }
-  }
+ 
 }

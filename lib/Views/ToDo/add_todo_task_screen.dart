@@ -1,4 +1,5 @@
-import '../../SQLite/sqlite.dart';
+import 'package:note_app/SQLite/task_sqlite.dart';
+
 import 'package:flutter/material.dart';
 import '../../JsonModels/task_model.dart';
 import '../../widgets/custom_button.dart';
@@ -13,13 +14,13 @@ class AddTaskScreen extends StatefulWidget {
 
 class _AddTaskScreenState extends State<AddTaskScreen> {
   late TextEditingController addTask;
-  late DatabaseHelper helper;
+  late DataBaseHelperTasks helper;
   GlobalKey<FormState> key = GlobalKey<FormState>();
   @override
   void initState() {
     super.initState();
     addTask = TextEditingController();
-    helper = DatabaseHelper();
+    helper = DataBaseHelperTasks();
   }
 
   @override

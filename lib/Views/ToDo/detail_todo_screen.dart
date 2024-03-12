@@ -1,7 +1,8 @@
 import 'dart:developer';
-import '../../SQLite/sqlite.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
+
+import '../../SQLite/task_sqlite.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
 
@@ -22,12 +23,12 @@ class ToDoUpdateScreen extends StatefulWidget {
 
 class _ToDoUpdateScreenState extends State<ToDoUpdateScreen> {
   late TextEditingController taskNameController;
-  late DatabaseHelper helper;
+  late DataBaseHelperTasks helper;
 
   @override
   void initState() {
     super.initState();
-    helper = DatabaseHelper();
+    helper = DataBaseHelperTasks();
     taskNameController = TextEditingController();
     taskNameController.text = widget.taskName;
   }

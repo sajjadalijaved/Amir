@@ -2,6 +2,7 @@ import 'package:intl/intl.dart';
 import '../../SQLite/sqlite.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/JsonModels/task_model.dart';
+import 'package:note_app/Views/ToDo/detail_todo_screen.dart';
 import 'package:note_app/Views/ToDo/add_todo_task_screen.dart';
 
 // ignore_for_file: use_build_context_synchronously
@@ -33,7 +34,7 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
     helper = DatabaseHelper();
     task = helper.fetchTaskData();
 
-    helper.tasksDB().whenComplete(() {
+    helper.getTaskDb().whenComplete(() {
       task = getAllTasks();
     });
   }
@@ -92,7 +93,7 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
                   if (snapshot.connectionState == ConnectionState.waiting) {
                     return const CircularProgressIndicator();
                   } else if (snapshot.hasData && snapshot.data!.isEmpty) {
-                    return const Center(child: Text("No TAsks Avaible"));
+                    return const Center(child: Text("No Tasks Avaible"));
                   } else if (snapshot.hasError) {
                     return Center(child: Text(snapshot.error.toString()));
                   } else {
@@ -116,19 +117,18 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
                               subtitle: Text(DateFormat("yMd").format(
                                   DateTime.parse(items[index].createdAt))),
                               onTap: () {
-                                // Navigator.push(
-                                //     context,
-                                //     MaterialPageRoute(
-                                //       builder: (context) => DetailSCreen(
-                                //         title: items[index].noteTitle,
-                                //         content: items[index].noteContent,
-                                //         contentId: items[index].noteId!,
-                                //       ),
-                                //     )).then((value) {
-                                //   if (value) {
-                                //     refresh();
-                                //   }
-                                // });
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ToDoUpdateScreen(
+                                        taskName: items[index].taskTitle,
+                                        taskId: items[index].taskId!,
+                                      ),
+                                    )).then((value) {
+                                  if (value) {
+                                    refresh();
+                                  }
+                                });
                               },
                             ),
                           ),

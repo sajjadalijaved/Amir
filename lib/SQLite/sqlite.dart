@@ -8,21 +8,15 @@ import 'package:note_app/JsonModels/note_model.dart';
 class DatabaseHelper {
   static Database? database;
   final databaseName = "note.db";
-  final databaseTask = "task.db";
   static String tableName = "notes_tb";
-  static String tasktable = "tasks_tb";
   static String usersTableName = "users_tb";
   String noteTable =
       "CREATE TABLE $tableName(noteId INTEGER PRIMARY KEY AUTOINCREMENT, noteTitle TEXT NOT NULL, noteContent TEXT NOT NULL, createdAt TEXT DEFAULT CURRENT_TIMESTAMP)";
   String dropTableNotes = 'DROP TABLE IF EXISTS $tableName';
-  String dropTableUsers = 'DROP TABLE IF EXISTS $usersTableName';
-
-  String taskTable =
-      "CREATE TABLE $tasktable(taskId INTEGER PRIMARY KEY AUTOINCREMENT, taskTitle TEXT NOT NULL, createdAt TEXT DEFAULT CURRENT_TIMESTAMP)";
-  String dropTabletask = 'DROP TABLE IF EXISTS $tasktable';
 
   String usersTable =
       "CREATE TABLE $usersTableName(usrId INTEGER PRIMARY KEY AUTOINCREMENT, usrFullName TEXT, usrPassword TEXT, usrEmail TEXT UNIQUE)";
+  String dropTableUsers = 'DROP TABLE IF EXISTS $usersTableName';
 
   Future<Database> notesDB() async {
     if (database == null) {
@@ -47,23 +41,26 @@ class DatabaseHelper {
   }
 
   // tasks database
-  Future<Database> tasksDB() async {
-    if (database == null) {
-      database =
-          await openDatabase(join(await getDatabasesPath(), databaseTask),
-              onCreate: (db, version) {
-        db.execute(taskTable); // Create the tasks table
 
-        log('******************OnCreate Task^^^^^^^^^^^^^^^^^^^^^^^^^ ');
-      }, onUpgrade: (db, oldVersion, newVersion) {
+  Future<Database> getTaskDb() async {
+    database ??= await openDatabase(
+      join(await getDatabasesPath(), databaseName),
+      onCreate: (db, version) {
+        db.execute(TaskModel.taskTableCreate);
+        log('Table created successfully');
+      },
+      onUpgrade: (db, oldVersion, newVersion) {
         if (oldVersion != newVersion) {
-          db.execute(dropTabletask);
-          db.execute(taskTable);
+          if (oldVersion < 2) {
+            // Add a new column
+            db.execute(
+                'ALTER TABLE ${TaskModel.tasktableName} ADD COLUMN newColumn TEXT');
+          }
         }
-      }, version: 2); // Incremented version for tasksDB
-      return Future.value(database);
-    }
-    return Future.value(database);
+      },
+      version: 2,
+    );
+    return database!;
   }
 
   // Login user
@@ -123,9 +120,10 @@ class DatabaseHelper {
 
   // search tasks
   Future<List<TaskModel>> searchtasks(String search) async {
-    final Database database = await tasksDB();
+    final Database database = await getTaskDb();
     List<Map<String, Object?>> searchResult = await database.rawQuery(
-        "select * from $taskTable where taskTitle LIKE ?", ["%$search%"]);
+        "select * from ${TaskModel.tasktableName} where taskTitle LIKE ?",
+        ["%$search%"]);
     return searchResult.map((e) => TaskModel.fromMap(e)).toList();
   }
 
@@ -152,10 +150,10 @@ class DatabaseHelper {
   // create tasks method
   Future<bool> createtask(TaskModel task) async {
     try {
-      Database? database = await tasksDB();
+      Database? database = await getTaskDb();
       int result = await database.insert(
-        taskTable,
-        task.toMap(),
+        TaskModel.tasktableName,
+        task.toMap(task),
       );
       log('*************************CreateNote data*******************');
 
@@ -178,9 +176,8 @@ class DatabaseHelper {
 
   // Get tasks
   Future<List<TaskModel>> fetchTaskData() async {
-    await tasksDB(); // Ensure the tasks table is created
-    Database? database = await tasksDB();
-    List<Map<String, dynamic>> list = await database.query(taskTable);
+    Database? database = await getTaskDb();
+    List list = await database.rawQuery(TaskModel.fetch_task);
     return list.map((map) => TaskModel.fromMap(map)).toList();
   }
 
@@ -204,9 +201,9 @@ class DatabaseHelper {
   // delete one task from database
   Future<bool> daleteOneTaskItem(int id) async {
     try {
-      Database? database = await tasksDB();
-      int rows = await database
-          .delete(taskTable, where: 'taskId = ?', whereArgs: [id]);
+      Database? database = await getTaskDb();
+      int rows = await database.delete(TaskModel.tasktableName,
+          where: 'taskId = ?', whereArgs: [id]);
 
       if (rows < 0) {
         return false;
@@ -243,9 +240,32 @@ class DatabaseHelper {
   }
 
   // update task
-  Future<int> updateTask(task, taskId) async {
-    final Database db = await tasksDB();
-    return db.rawUpdate('update $taskTable set taskTitle = ?, where taskId = ?',
-        [task, taskId]);
+  // Future<int> updateTask(task, taskId) async {
+  //   final Database db = await getTaskDb();
+  //   return db.rawUpdate(
+  //       'update ${TaskModel.tasktableName} set taskTitle = ?, where taskId = ?',
+  //       [task, taskId]);
+  // }
+
+  Future<bool> updateTask(String taskTitle, int id) async {
+    try {
+      Database? database = await getTaskDb();
+      int rows = await database.update(
+          TaskModel.tasktableName,
+          {
+            TaskModel.key_taskTitle: taskTitle,
+          },
+          where: '${TaskModel.key_taskId} = ?',
+          whereArgs: [id]);
+      log('*************************update data*******************');
+
+      if (rows < 0) {
+        return false;
+      }
+      return true;
+    } catch (e) {
+      log("update Error : $e");
+      return false;
+    }
   }
 }

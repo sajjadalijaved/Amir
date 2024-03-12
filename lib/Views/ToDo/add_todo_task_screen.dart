@@ -104,7 +104,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   taskTitle: title,
                                   createdAt: DateTime.now().toIso8601String()))
                               .whenComplete(() {
-                            Navigator.of(context).pop(true);
+                            // Navigator.of(context).pop(true);
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

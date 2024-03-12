@@ -1,6 +1,6 @@
-import '../Custom/constant.dart';
+import '../../Custom/constant.dart';
 import 'package:flutter/material.dart';
-import '../JsonModels/note_model.dart';
+import '../../JsonModels/note_model.dart';
 import 'package:note_app/SQLite/sqlite.dart';
 import 'package:note_app/widgets/custom_button.dart';
 

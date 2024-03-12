@@ -1,5 +1,5 @@
-import '../Custom/constant.dart';
-import '../JsonModels/user.dart';
+import '../../Custom/constant.dart';
+import '../../JsonModels/user.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/widgets/custom_button.dart';
 

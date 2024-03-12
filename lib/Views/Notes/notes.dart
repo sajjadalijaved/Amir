@@ -1,9 +1,9 @@
 import 'package:intl/intl.dart';
 import 'create_note_screen.dart';
 import 'package:flutter/material.dart';
-import '../JsonModels/note_model.dart';
+import '../../JsonModels/note_model.dart';
 import 'package:note_app/SQLite/sqlite.dart';
-import 'package:note_app/Views/detail_screen.dart';
+import 'package:note_app/Views/Notes/detail_screen.dart';
 
 // ignore_for_file: use_build_context_synchronously
 

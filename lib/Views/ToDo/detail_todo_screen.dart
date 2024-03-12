@@ -1,24 +1,35 @@
+import 'dart:developer';
+import '../../SQLite/sqlite.dart';
 import 'package:flutter/material.dart';
 import 'package:animate_do/animate_do.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+
+// ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
 
 // ignore_for_file: deprecated_member_use, use_build_context_synchronously
 
-class UpdateScreen extends StatefulWidget {
-  const UpdateScreen({
+class ToDoUpdateScreen extends StatefulWidget {
+  int taskId;
+  String taskName;
+  ToDoUpdateScreen({
     super.key,
+    required this.taskId,
+    required this.taskName,
   });
 
   @override
-  State<UpdateScreen> createState() => _UpdateScreenState();
+  State<ToDoUpdateScreen> createState() => _ToDoUpdateScreenState();
 }
 
-class _UpdateScreenState extends State<UpdateScreen> {
-  var taskNameController = TextEditingController();
+class _ToDoUpdateScreenState extends State<ToDoUpdateScreen> {
+  late TextEditingController taskNameController;
+  late DatabaseHelper helper;
 
   @override
   void initState() {
     super.initState();
+    helper = DatabaseHelper();
+    taskNameController = TextEditingController();
+    taskNameController.text = widget.taskName;
   }
 
   @override
@@ -27,7 +38,6 @@ class _UpdateScreenState extends State<UpdateScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Update Task'),
-        backgroundColor: const Color(0xffFFB900),
       ),
       body: Column(
         children: [
@@ -45,19 +55,19 @@ class _UpdateScreenState extends State<UpdateScreen> {
                 decoration: InputDecoration(
                     prefixIcon: const Icon(
                       Icons.update,
-                      color: Colors.grey,
+                      color: Colors.black,
                     ),
                     labelText: 'Enter Task Name',
-                    labelStyle: const TextStyle(color: Colors.grey),
+                    labelStyle: const TextStyle(color: Colors.black),
                     enabledBorder: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10),
                       borderSide:
-                          const BorderSide(width: 2, color: Color(0xffFFB900)),
+                          const BorderSide(width: 2, color: Color(0xff734a34)),
                     ),
                     focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(10),
                         borderSide: const BorderSide(
-                            width: 2, color: Color(0xffFFB900)))),
+                            width: 2, color: Color(0xff734a34)))),
               ),
             ),
           ),
@@ -70,14 +80,20 @@ class _UpdateScreenState extends State<UpdateScreen> {
               child: OutlinedButton(
                   style: OutlinedButton.styleFrom(
                     foregroundColor: Colors.white,
-                    backgroundColor: const Color(0xffFFB900),
+                    backgroundColor: const Color(0xff734a34),
                   ),
                   onPressed: () async {
-                    var taskName = taskNameController.text;
-                    if (taskName.isEmpty) {
-                      Fluttertoast.showToast(msg: 'Please Enter Task Name');
-                      return;
-                    }
+                    String task1 = taskNameController.text.toString();
+
+                    log("title:$task1 ,taskId:${widget.taskId}");
+                    helper.updateTask(task1, widget.taskId).whenComplete(() {
+                      Navigator.of(context).pop(true);
+                    });
+
+                    taskNameController.clear();
+
+                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                        content: Text("Task Update Successfully!")));
                   },
                   child: const Text(
                     'Update Task',

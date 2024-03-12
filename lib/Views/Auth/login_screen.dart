@@ -1,46 +1,42 @@
 import 'dart:developer';
-import 'login_screen.dart';
-import '../JsonModels/user.dart';
-import '../Custom/validation.dart';
+import 'sign_up_screen.dart';
+import '../../JsonModels/user.dart';
+import '../../Custom/validation.dart';
 import 'package:ndialog/ndialog.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/SQLite/sqlite.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:note_app/Views/Notes/notes.dart';
 // ignore_for_file: use_build_context_synchronously
 
-class SignUp extends StatefulWidget {
-  const SignUp({super.key});
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _LoginScreenState extends State<LoginScreen> {
   late TextEditingController username;
   late TextEditingController password;
-  late TextEditingController email;
-  late TextEditingController confirmpassword;
-
-  final formKey = GlobalKey<FormState>();
-  bool isVisible = false;
-
   final DatabaseHelper helper = DatabaseHelper();
 
+  bool isVisible = false;
+
+  bool isLoginTrue = false;
+
+  final formKey = GlobalKey<FormState>();
   @override
   void initState() {
     username = TextEditingController();
-    email = TextEditingController();
     password = TextEditingController();
-    confirmpassword = TextEditingController();
     super.initState();
   }
 
   @override
   void dispose() {
-    email.dispose();
     username.dispose();
     password.dispose();
-    confirmpassword.dispose();
     super.dispose();
   }
 
@@ -49,21 +45,17 @@ class _SignUpState extends State<SignUp> {
     return Scaffold(
       body: Center(
         child: SingleChildScrollView(
-          child: Form(
-            key: formKey,
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: Form(
+              key: formKey,
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const ListTile(
-                    title: Text(
-                      "Register New Account",
-                      style:
-                          TextStyle(fontSize: 50, fontWeight: FontWeight.bold),
-                    ),
+                  Image.asset(
+                    "assets/login.png",
+                    width: 210,
                   ),
-
+                  const SizedBox(height: 15),
                   Container(
                     margin: const EdgeInsets.all(8),
                     padding:
@@ -73,32 +65,12 @@ class _SignUpState extends State<SignUp> {
                         color: Colors.deepPurple.withOpacity(.2)),
                     child: TextFormField(
                       controller: username,
-                      validator: (value) {
-                        return FieldValidator.validateName(value.toString());
-                      },
-                      decoration: const InputDecoration(
-                        icon: Icon(Icons.person),
-                        border: InputBorder.none,
-                        hintText: "User full name",
-                      ),
-                    ),
-                  ),
-
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
-                    child: TextFormField(
-                      controller: email,
                       textInputAction: TextInputAction.next,
                       validator: (value) {
                         return FieldValidator.validateEmail(value.toString());
                       },
                       decoration: const InputDecoration(
-                        icon: Icon(Icons.email_outlined),
+                        icon: Icon(Icons.person),
                         border: InputBorder.none,
                         hintText: "User email",
                       ),
@@ -136,38 +108,6 @@ class _SignUpState extends State<SignUp> {
                     ),
                   ),
 
-                  //Confirm Password field
-
-                  Container(
-                    margin: const EdgeInsets.all(8),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(8),
-                        color: Colors.deepPurple.withOpacity(.2)),
-                    child: TextFormField(
-                      controller: confirmpassword,
-                      validator: (value) {
-                        return FieldValidator.validatePasswordMatch(
-                            confirmpassword.text.toString(), value.toString());
-                      },
-                      obscureText: !isVisible,
-                      decoration: InputDecoration(
-                          icon: const Icon(Icons.lock),
-                          border: InputBorder.none,
-                          hintText: "Confirmed Password",
-                          suffixIcon: IconButton(
-                              onPressed: () {
-                                setState(() {
-                                  isVisible = !isVisible;
-                                });
-                              },
-                              icon: Icon(isVisible
-                                  ? Icons.visibility
-                                  : Icons.visibility_off))),
-                    ),
-                  ),
-
                   const SizedBox(height: 10),
                   //Login button
                   Container(
@@ -181,7 +121,7 @@ class _SignUpState extends State<SignUp> {
                           if (formKey.currentState!.validate()) {
                             ProgressDialog progress = ProgressDialog(context,
                                 title: const Text(
-                                  'Signing Up',
+                                  'Signing In',
                                   style: TextStyle(color: Color(0xffFFB900)),
                                 ),
                                 message: const Text(
@@ -190,49 +130,63 @@ class _SignUpState extends State<SignUp> {
                                 ));
                             progress.show();
                             try {
-                              var response = await helper.signUpUser(Users(
-                                  usrFullName: username.text,
-                                  usrEmail: email.text.trim(),
+                              var response = await helper.loginUser(Users(
+                                  usrEmail: username.text,
                                   usrPassword: password.text));
                               progress.dismiss();
                               if (response == true) {
+                                if (!mounted) return;
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) =>
-                                            const LoginScreen()),
+                                        builder: (context) => const NotesScreen(
+                                            // userName:
+                                            //     username.text.toString(),
+                                            )),
                                     (route) => false);
                                 Fluttertoast.showToast(
-                                    msg: 'SignUp Successfully!');
+                                    msg: 'Login Successfully!');
+                              } else {
+                                setState(() {
+                                  isLoginTrue = true;
+                                });
                               }
                             } catch (e) {
-                              log("Signup Error : $e");
+                              log("Login Error : $e");
                             }
                           }
                         },
                         child: const Text(
-                          "SIGN UP",
+                          "LOGIN",
                           style: TextStyle(color: Colors.white),
                         )),
                   ),
 
+                  //Sign up button
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text("Already have an account?"),
+                      const Text("Don't have an account?"),
                       TextButton(
                           onPressed: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const LoginScreen()));
+                                    builder: (context) => const SignUp()));
                           },
                           child: const Text(
-                            "Login",
+                            "SIGN UP",
                             style: TextStyle(color: Color(0xff734a34)),
                           ))
                     ],
-                  )
+                  ),
+
+                  isLoginTrue
+                      ? const Text(
+                          "Username or passowrd is incorrect",
+                          style: TextStyle(color: Colors.red),
+                        )
+                      : const SizedBox(),
                 ],
               ),
             ),

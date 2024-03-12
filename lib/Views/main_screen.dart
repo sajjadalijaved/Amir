@@ -1,6 +1,5 @@
-import 'package:flutter/widgets.dart';
 import 'package:flutter/material.dart';
-import 'package:note_app/Views/notes.dart';
+import 'package:note_app/Views/Notes/notes.dart';
 import 'package:note_app/Views/ToDo/todo_main_screen.dart';
 
 class MainScreen extends StatefulWidget {

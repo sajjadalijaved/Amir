@@ -138,15 +138,63 @@ class _DetailSState extends State<DetailSCreen> {
                     child: CustomButton(
                         title: "Delete Note",
                         onTap: () {
-                          helper
-                              .daleteOneDataItem(widget.contentId)
-                              .whenComplete(() {
-                            Navigator.of(context).pop(true);
-                          });
+                          // show dialog for note delete
+                          showDialog(
+                            context: context,
+                            barrierDismissible: false,
+                            builder: (BuildContext context) {
+                              return AlertDialog(
+                                title: const Center(
+                                  child: Text(
+                                    'Notes',
+                                  ),
+                                ),
+                                content: const Text(
+                                    'Are you sure you want to delete this notes?'),
+                                actions: <Widget>[
+                                  MaterialButton(
+                                    minWidth: 20,
+                                    elevation: 5,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    colorBrightness: Brightness.dark,
+                                    splashColor: Colors.white12,
+                                    animationDuration:
+                                        const Duration(milliseconds: 500),
+                                    textColor: Colors.white,
+                                    color: const Color(0xff734a34),
+                                    child: const Text('No'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  MaterialButton(
+                                    minWidth: 20,
+                                    elevation: 5,
+                                    clipBehavior: Clip.antiAliasWithSaveLayer,
+                                    colorBrightness: Brightness.dark,
+                                    splashColor: Colors.white12,
+                                    animationDuration:
+                                        const Duration(milliseconds: 500),
+                                    textColor: Colors.white,
+                                    color: const Color(0xff734a34),
+                                    child: const Text('Yes'),
+                                    onPressed: () async {
+                                      helper
+                                          .daleteOneDataItem(widget.contentId)
+                                          .whenComplete(() {
+                                        Navigator.of(context).pop(true);
+                                      });
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text("Note Delete Successfully!")));
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(const SnackBar(
+                                              content: Text(
+                                                  "Note Delete Successfully!")));
+                                    },
+                                  ),
+                                ],
+                              );
+                            },
+                          );
                         }),
                   ),
                 ],

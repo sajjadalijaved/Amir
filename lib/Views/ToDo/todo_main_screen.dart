@@ -116,6 +116,71 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
                               ),
                               subtitle: Text(DateFormat("yMd").format(
                                   DateTime.parse(items[index].createdAt))),
+                              trailing: IconButton(
+                                  onPressed: () {
+                                    // show dialog for task delete
+                                    showDialog(
+                                      context: context,
+                                      barrierDismissible: false,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: const Center(
+                                            child: Text(
+                                              'Tasks',
+                                            ),
+                                          ),
+                                          content: const Text(
+                                              'Are you sure you want to delete this task?'),
+                                          actions: <Widget>[
+                                            MaterialButton(
+                                              minWidth: 20,
+                                              elevation: 5,
+                                              clipBehavior:
+                                                  Clip.antiAliasWithSaveLayer,
+                                              colorBrightness: Brightness.dark,
+                                              splashColor: Colors.white12,
+                                              animationDuration: const Duration(
+                                                  milliseconds: 500),
+                                              textColor: Colors.white,
+                                              color: const Color(0xff734a34),
+                                              child: const Text('No'),
+                                              onPressed: () {
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                            MaterialButton(
+                                              minWidth: 20,
+                                              elevation: 5,
+                                              clipBehavior:
+                                                  Clip.antiAliasWithSaveLayer,
+                                              colorBrightness: Brightness.dark,
+                                              splashColor: Colors.white12,
+                                              animationDuration: const Duration(
+                                                  milliseconds: 500),
+                                              textColor: Colors.white,
+                                              color: const Color(0xff734a34),
+                                              child: const Text('Yes'),
+                                              onPressed: () async {
+                                                helper
+                                                    .daleteOneTaskItem(
+                                                        items[index].taskId!)
+                                                    .whenComplete(() {
+                                                  refresh();
+                                                  ScaffoldMessenger.of(context)
+                                                      .showSnackBar(const SnackBar(
+                                                          content: Text(
+                                                              "Task Delete Successfully!")));
+                                                });
+
+                                                Navigator.of(context).pop();
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                  icon: const Icon(Icons.delete)),
                               onTap: () {
                                 Navigator.push(
                                     context,

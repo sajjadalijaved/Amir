@@ -104,37 +104,14 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   taskTitle: title,
                                   createdAt: DateTime.now().toIso8601String()))
                               .whenComplete(() {
-                            // Navigator.of(context).pop(true);
+                            Navigator.of(context).pop(true);
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text("Task Add Successfully!")));
                         }
                       }),
-                )
-                //  SizedBox(
-                //   width: 150,
-                //   height: 40,
-                //   child: OutlinedButton(
-                //       onPressed: () async {
-                //         if (key.currentState!.validate()) {
-                //           String addTaskName = addTask.text.toString();
-                //           addTask.clear();
-
-                //           try {
-                //             Fluttertoast.showToast(
-                //                 msg: 'Task Added Successfully!');
-                //           } catch (e) {
-                //             Fluttertoast.showToast(msg: 'Something went wrong');
-                //           }
-                //         }
-                //       },
-                //       child: const Text(
-                //         'Save Task',
-                //         style: TextStyle(fontSize: 20, color: Color(0xffFFB900)),
-                //       )),
-                // ),
-                )
+                ))
           ],
         ),
       ),

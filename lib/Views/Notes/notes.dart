@@ -5,6 +5,7 @@ import '../../JsonModels/note_model.dart';
 import 'package:note_app/SQLite/sqlite.dart';
 import 'package:note_app/Views/Notes/detail_screen.dart';
 
+import 'image_to_text_screen.dart';
 import 'speech_to_text.dart';
 
 // ignore_for_file: use_build_context_synchronously
@@ -223,6 +224,35 @@ class _NotesScreenState extends State<NotesScreen> {
                               });
                             },
                           ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          MaterialButton(
+                            elevation: 5,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            colorBrightness: Brightness.dark,
+                            splashColor: Colors.white12,
+                            animationDuration:
+                                const Duration(milliseconds: 500),
+                            textColor: Colors.white,
+                            color: const Color(0xff734a34),
+                            child: const FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text('Add Notes With Image To Text')),
+                            onPressed: () async {
+                              Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const ImageToTextNotesScreen()))
+                                  .then((value) {
+                                if (value) {
+                                  refresh();
+                                  Navigator.of(context).pop(true);
+                                }
+                              });
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -231,7 +261,6 @@ class _NotesScreenState extends State<NotesScreen> {
               );
             },
           );
-        
         },
         child: const Icon(
           Icons.add,

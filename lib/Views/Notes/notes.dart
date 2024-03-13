@@ -196,7 +196,7 @@ class _NotesScreenState extends State<NotesScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
                           MaterialButton(
                             elevation: 5,
@@ -225,7 +225,7 @@ class _NotesScreenState extends State<NotesScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
                           MaterialButton(
                             elevation: 5,

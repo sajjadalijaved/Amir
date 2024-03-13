@@ -5,6 +5,7 @@ import 'package:note_app/Views/ToDo/detail_todo_screen.dart';
 import 'package:note_app/Views/ToDo/add_todo_task_screen.dart';
 
 import '../../SQLite/task_sqlite.dart';
+import 'image_to_text_screen.dart';
 import 'speech_to_text.dart';
 
 // ignore_for_file: use_build_context_synchronously
@@ -259,7 +260,7 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
                             },
                           ),
                           const SizedBox(
-                            height: 20,
+                            height: 10,
                           ),
                           MaterialButton(
                             elevation: 5,
@@ -287,6 +288,35 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
                               });
                             },
                           ),
+                            const SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    MaterialButton(
+                                                      elevation: 5,
+                                                      clipBehavior: Clip.antiAliasWithSaveLayer,
+                                                      colorBrightness: Brightness.dark,
+                                                      splashColor: Colors.white12,
+                                                      animationDuration:
+                                                          const Duration(milliseconds: 500),
+                                                      textColor: Colors.white,
+                                                      color: const Color(0xff734a34),
+                                                      child: const FittedBox(
+                                                          fit: BoxFit.contain,
+                                                          child: Text('Add Task With Image To Text')),
+                                                      onPressed: () async {
+                                                        Navigator.push(
+                                                                context,
+                                                                MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        const ImageToTextTasksScreen()))
+                                                            .then((value) {
+                                                          if (value) {
+                                                            refresh();
+                                                            Navigator.of(context).pop(true);
+                                                          }
+                                                        });
+                                                      },
+                                                    ),
                         ],
                       ),
                     ),

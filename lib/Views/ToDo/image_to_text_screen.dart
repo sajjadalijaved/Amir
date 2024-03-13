@@ -144,7 +144,7 @@ class _ImageToTextTasksScreenState extends State<ImageToTextTasksScreen> {
                     Padding(
                       padding: const EdgeInsets.only(right: 20, left: 20),
                       child: CustomButton(
-                        title: "Save Note",
+                        title: "Save Task",
                         onTap: () {
                           if (text != "") {
                             String title = text;

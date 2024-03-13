@@ -5,6 +5,8 @@ import '../../JsonModels/note_model.dart';
 import 'package:note_app/SQLite/sqlite.dart';
 import 'package:note_app/Views/Notes/detail_screen.dart';
 
+import 'speech_to_text.dart';
+
 // ignore_for_file: use_build_context_synchronously
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
@@ -145,13 +147,91 @@ class _NotesScreenState extends State<NotesScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xff734a34),
         onPressed: () {
-          Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const CreateNote()))
-              .then((value) {
-            if (value) {
-              refresh();
-            }
-          });
+          showDialog(
+            context: context,
+            barrierDismissible: false,
+            builder: (BuildContext context) {
+              return Center(
+                child: Material(
+                  color: Colors.transparent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.8,
+                    height: MediaQuery.of(context).size.height * 0.4,
+                    child: AlertDialog(
+                      title: const Center(
+                        child: Text(
+                          'Notes',
+                        ),
+                      ),
+                      content: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          MaterialButton(
+                            elevation: 5,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            colorBrightness: Brightness.dark,
+                            splashColor: Colors.white12,
+                            animationDuration:
+                                const Duration(milliseconds: 500),
+                            textColor: Colors.white,
+                            color: const Color(0xff734a34),
+                            child: const FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text('Add Notes With Text')),
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const CreateNote())).then((value) {
+                                if (value) {
+                                  refresh();
+                                  Navigator.of(context).pop(true);
+                                }
+                              });
+                            },
+                          ),
+                          const SizedBox(
+                            height: 20,
+                          ),
+                          MaterialButton(
+                            elevation: 5,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            colorBrightness: Brightness.dark,
+                            splashColor: Colors.white12,
+                            animationDuration:
+                                const Duration(milliseconds: 500),
+                            textColor: Colors.white,
+                            color: const Color(0xff734a34),
+                            child: const FittedBox(
+                                fit: BoxFit.contain,
+                                child: Text('Add Notes With Voice')),
+                            onPressed: () async {
+                              Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const SpeechToTextScreen()))
+                                  .then((value) {
+                                if (value) {
+                                  refresh();
+                                  Navigator.of(context).pop(true);
+                                }
+                              });
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              );
+            },
+          );
+        
         },
         child: const Icon(
           Icons.add,

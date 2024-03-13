@@ -195,6 +195,7 @@ class _DetailSState extends State<DetailSCreen> {
                               );
                             },
                           );
+
                         }),
                   ),
                 ],

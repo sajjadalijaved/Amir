@@ -34,6 +34,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Task'),
+         leading: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Icon(Icons.arrow_back)),
       ),
       body: Form(
         key: key,

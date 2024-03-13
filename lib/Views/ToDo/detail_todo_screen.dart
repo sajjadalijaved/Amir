@@ -39,6 +39,11 @@ class _ToDoUpdateScreenState extends State<ToDoUpdateScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Update Task'),
+         leading: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Icon(Icons.arrow_back)),
       ),
       body: Column(
         children: [

@@ -48,7 +48,11 @@ class _DetailSState extends State<DetailSCreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
+        leading: InkWell(
+               onTap: () {
+                 Navigator.of(context).pop(true);
+               },
+               child: const Icon(Icons.arrow_back)),
         title: Text(widget.title.toString()),
       ),
       body: SingleChildScrollView(

@@ -38,7 +38,11 @@ class _CreateNoteState extends State<CreateNote> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Create note"),
-        automaticallyImplyLeading: true,
+       leading: InkWell(
+        onTap: () {
+          Navigator.of(context).pop(true);
+        },
+        child: const Icon(Icons.arrow_back)),
       ),
       body: SingleChildScrollView(
         child: Form(

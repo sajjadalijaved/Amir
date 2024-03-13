@@ -64,6 +64,11 @@ class _SpeechToTextToDoScreenState extends State<SpeechToTextToDoScreen> {
             color: Colors.black,
           ),
         ),
+         leading: InkWell(
+                onTap: () {
+                  Navigator.of(context).pop(true);
+                },
+                child: const Icon(Icons.arrow_back)),
       ),
       body: Center(
         child: Column(

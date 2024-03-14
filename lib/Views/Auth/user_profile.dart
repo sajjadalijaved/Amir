@@ -46,13 +46,6 @@ class Profile extends StatelessWidget {
                 ),
                 title: const Text("Email"),
               ),
-              const ListTile(
-                leading: Icon(Icons.account_circle, size: 30),
-                subtitle: Text("Sajjad Ali"),
-                title: Text(
-                  "Admin",
-                ),
-              ),
               CustomButton(
                   title: "Go Back",
                   onTap: () {

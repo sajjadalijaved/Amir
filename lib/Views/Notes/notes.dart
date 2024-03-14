@@ -13,9 +13,8 @@ import 'speech_to_text.dart';
 // ignore_for_file: public_member_api_docs, sort_constructors_first, must_be_immutable
 
 class NotesScreen extends StatefulWidget {
-  const NotesScreen({
-    super.key,
-  });
+  String username;
+  NotesScreen({super.key, required this.username});
 
   @override
   State<NotesScreen> createState() => _NotesScreenState();
@@ -38,9 +37,9 @@ class _NotesScreenState extends State<NotesScreen> {
     helper = DatabaseHelper();
     notes = helper.fetchData();
 
-    // helper.notesDB().whenComplete(() {
-    //   notes = getAllNotes();
-    // });
+    helper.notesDB().whenComplete(() {
+      notes = getAllNotes();
+    });
   }
 
   Future<List<NoteModel>> getAllNotes() async {
@@ -128,11 +127,12 @@ class _NotesScreenState extends State<NotesScreen> {
                                         title: items[index].noteTitle,
                                         content: items[index].noteContent,
                                         contentId: items[index].noteId!,
+                                        userName: widget.username,
                                       ),
-                                    )).then((value) {
-                                  if (value) {
+                                    )).whenComplete(() {
+                                  setState(() {
                                     refresh();
-                                  }
+                                  });
                                 });
                               },
                             ),
@@ -190,7 +190,7 @@ class _NotesScreenState extends State<NotesScreen> {
                                           const CreateNote())).then((value) {
                                 if (value) {
                                   refresh();
-                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
                                 }
                               });
                             },
@@ -219,7 +219,7 @@ class _NotesScreenState extends State<NotesScreen> {
                                   .then((value) {
                                 if (value) {
                                   refresh();
-                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
                                 }
                               });
                             },
@@ -248,7 +248,7 @@ class _NotesScreenState extends State<NotesScreen> {
                                   .then((value) {
                                 if (value) {
                                   refresh();
-                                  Navigator.of(context).pop(true);
+                                  Navigator.of(context).pop();
                                 }
                               });
                             },

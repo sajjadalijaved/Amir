@@ -1,4 +1,6 @@
 import 'dart:developer';
+import 'package:note_app/Views/main_screen.dart';
+
 import 'sign_up_screen.dart';
 import '../../JsonModels/user.dart';
 import '../../Custom/validation.dart';
@@ -6,7 +8,6 @@ import 'package:ndialog/ndialog.dart';
 import 'package:flutter/material.dart';
 import 'package:note_app/SQLite/sqlite.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:note_app/Views/Notes/notes.dart';
 // ignore_for_file: use_build_context_synchronously
 
 class LoginScreen extends StatefulWidget {
@@ -139,9 +140,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => const NotesScreen(
-                                            // userName:
-                                            //     username.text.toString(),
+                                        builder: (context) => MainScreen(
+                                            userName:
+                                                username.text.toString(),
                                             )),
                                     (route) => false);
                                 Fluttertoast.showToast(

@@ -39,11 +39,11 @@ class _ToDoUpdateScreenState extends State<ToDoUpdateScreen> {
       appBar: AppBar(
         centerTitle: true,
         title: const Text('Update Task'),
-         leading: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop(true);
-                },
-                child: const Icon(Icons.arrow_back)),
+        leading: InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: const Icon(Icons.arrow_back)),
       ),
       body: Column(
         children: [
@@ -93,13 +93,12 @@ class _ToDoUpdateScreenState extends State<ToDoUpdateScreen> {
 
                     log("title:$task1 ,taskId:${widget.taskId}");
                     helper.updateTask(task1, widget.taskId).whenComplete(() {
+                      taskNameController.clear();
                       Navigator.of(context).pop(true);
+
+                      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                          content: Text("Task Update Successfully!")));
                     });
-
-                    taskNameController.clear();
-
-                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-                        content: Text("Task Update Successfully!")));
                   },
                   child: const Text(
                     'Update Task',

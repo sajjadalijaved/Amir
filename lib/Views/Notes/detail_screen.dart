@@ -1,4 +1,7 @@
 import 'dart:developer';
+import 'package:note_app/Views/main_screen.dart';
+
+import '../../JsonModels/note_model.dart';
 import '../../SQLite/sqlite.dart';
 import '../../Custom/constant.dart';
 import 'package:flutter/material.dart';
@@ -10,13 +13,15 @@ class DetailSCreen extends StatefulWidget {
   String title;
   int contentId;
   String content;
+  String userName;
 
-  DetailSCreen({
-    Key? key,
-    required this.title,
-    required this.contentId,
-    required this.content,
-  }) : super(key: key);
+  DetailSCreen(
+      {Key? key,
+      required this.title,
+      required this.contentId,
+      required this.content,
+      required this.userName})
+      : super(key: key);
 
   @override
   State<DetailSCreen> createState() => _DetailSState();
@@ -26,6 +31,17 @@ class _DetailSState extends State<DetailSCreen> {
   late DatabaseHelper helper;
   late TextEditingController title;
   late TextEditingController content;
+  late Future<List<NoteModel>> notes;
+
+  Future<List<NoteModel>> getAllNotes() async {
+    return await helper.fetchData();
+  }
+
+  Future<void> refresh() async {
+    setState(() {
+      notes = helper.fetchData();
+    });
+  }
 
   @override
   void initState() {
@@ -35,6 +51,11 @@ class _DetailSState extends State<DetailSCreen> {
     title.text = widget.title;
     content.text = widget.content;
     helper = DatabaseHelper();
+    notes = helper.fetchData();
+
+    helper.notesDB().whenComplete(() {
+      notes = getAllNotes();
+    });
   }
 
   @override
@@ -49,10 +70,10 @@ class _DetailSState extends State<DetailSCreen> {
     return Scaffold(
       appBar: AppBar(
         leading: InkWell(
-               onTap: () {
-                 Navigator.of(context).pop(true);
-               },
-               child: const Icon(Icons.arrow_back)),
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: const Icon(Icons.arrow_back)),
         title: Text(widget.title.toString()),
       ),
       body: SingleChildScrollView(
@@ -124,15 +145,21 @@ class _DetailSState extends State<DetailSCreen> {
                           helper
                               .updateNote(title1, content1, widget.contentId)
                               .whenComplete(() {
-                            Navigator.of(context).pop(true);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      MainScreen(userName: widget.userName),
+                                ));
+                            title.clear();
+                            content.clear();
                           });
-
-                          title.clear();
-                          content.clear();
 
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
                                   content: Text("Note Update Successfully!")));
+
+                          // Navigator.of(context).pop();
                         }),
                   ),
                   const SizedBox(
@@ -186,20 +213,20 @@ class _DetailSState extends State<DetailSCreen> {
                                       helper
                                           .daleteOneDataItem(widget.contentId)
                                           .whenComplete(() {
-                                        Navigator.of(context).pop(true);
+                                        refresh();
+                                        Navigator.of(context).pop();
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    "Note Delete Successfully!")));
                                       });
-
-                                      ScaffoldMessenger.of(context)
-                                          .showSnackBar(const SnackBar(
-                                              content: Text(
-                                                  "Note Delete Successfully!")));
+                                      Navigator.of(context).pop(true);
                                     },
                                   ),
                                 ],
                               );
                             },
                           );
-
                         }),
                   ),
                 ],
@@ -209,7 +236,7 @@ class _DetailSState extends State<DetailSCreen> {
               ),
               TextButton(
                   onPressed: () {
-                    Navigator.of(context).pop(true);
+                    Navigator.of(context).pop();
                   },
                   child: const Text(
                     "Go Back",

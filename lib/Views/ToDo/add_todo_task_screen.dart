@@ -36,7 +36,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         title: const Text('Add Task'),
          leading: InkWell(
                 onTap: () {
-                  Navigator.of(context).pop(true);
+                  Navigator.of(context).pop();
                 },
                 child: const Icon(Icons.arrow_back)),
       ),
@@ -110,7 +110,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   taskTitle: title,
                                   createdAt: DateTime.now().toIso8601String()))
                               .whenComplete(() {
-                            Navigator.of(context).pop(true);
+                            Navigator.of(context).pop();
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

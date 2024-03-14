@@ -1,9 +1,18 @@
+// ignore_for_file: use_build_context_synchronously, must_be_immutable
+
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
+import 'package:note_app/SQLite/sqlite.dart';
 import 'package:note_app/Views/Notes/notes.dart';
 import 'package:note_app/Views/ToDo/todo_main_screen.dart';
 
+import '../JsonModels/user.dart';
+import 'Auth/user_profile.dart';
+
 class MainScreen extends StatefulWidget {
-  const MainScreen({super.key});
+  String userName;
+   MainScreen({super.key,required this.userName});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -11,6 +20,7 @@ class MainScreen extends StatefulWidget {
 
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late PageController _pageController;
+  late DatabaseHelper helper;
   int currentIndex = 0;
   List<String> name = [
     "Notes",
@@ -20,6 +30,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   void initState() {
     _pageController = PageController();
+    helper = DatabaseHelper();
     super.initState();
   }
 
@@ -34,32 +45,33 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
     Size size = MediaQuery.sizeOf(context);
     return Scaffold(
         appBar: AppBar(
-          title: const Text("Notes"),
-          // actions: [
-          //   InkWell(
-          //     onTap: () async {
-          //       Users? usrDetails =
-          //           await helper.getUser(widget.userName.toString());
-          //       log("userDetails : $usrDetails");
-          //       if (usrDetails != null) {
-          //         Navigator.push(
-          //           context,
-          //           MaterialPageRoute(
-          //               builder: (_) => Profile(
-          //                     profile: usrDetails,
-          //                   )),
-          //         );
-          //       }
-          //     },
-          //     child: const Icon(
-          //       Icons.person_pin,
-          //       size: 35,
-          //     ),
-          //   ),
-          //   const SizedBox(
-          //     width: 15,
-          //   ),
-          // ],
+          automaticallyImplyLeading: false,
+          title: currentIndex == 0 ? const Text("Notes") : const Text("Tasks"),
+          actions: [
+            InkWell(
+              onTap: () async {
+                Users? usrDetails =
+                    await helper.getUser(widget.userName.toString());
+                log("userDetails : $usrDetails");
+                if (usrDetails != null) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (_) => Profile(
+                              profile: usrDetails,
+                            )),
+                  );
+                }
+              },
+              child: const Icon(
+                Icons.person_pin,
+                size: 35,
+              ),
+            ),
+            const SizedBox(
+              width: 15,
+            ),
+          ],
         ),
         body: SizedBox(
           width: size.width,
@@ -142,9 +154,9 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       });
                     },
                     controller: _pageController,
-                    children: const [
-                      NotesScreen(),
-                      ToDoMainScreen(),
+                    children:  [
+                      NotesScreen(username: widget.userName.toString() ,),
+                      const ToDoMainScreen(),
                     ]),
               )
             ],

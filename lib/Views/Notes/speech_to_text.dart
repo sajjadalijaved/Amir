@@ -1,6 +1,8 @@
 // ignore_for_file: unused_field
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:note_app/widgets/custom_button.dart';
 import 'package:speech_to_text/speech_to_text.dart';
 import '../../JsonModels/note_model.dart';
@@ -64,6 +66,20 @@ class _SpeechToTextScreenState extends State<SpeechToTextScreen> {
             color: Colors.black,
           ),
         ),
+         actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: CupertinoButton(
+                minSize: 0,
+                padding: EdgeInsets.zero,
+                child: const Icon(Icons.copy),
+                onPressed: () {
+                  Clipboard.setData(ClipboardData(text: _wordsSpoken));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Copied to Clipboard')));
+                }),
+          )
+        ],
          leading: InkWell(
                 onTap: () {
                   Navigator.of(context).pop(true);

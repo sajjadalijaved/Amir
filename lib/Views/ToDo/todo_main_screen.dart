@@ -3,10 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:note_app/JsonModels/task_model.dart';
 import 'package:note_app/Views/ToDo/detail_todo_screen.dart';
 import 'package:note_app/Views/ToDo/add_todo_task_screen.dart';
-
 import '../../SQLite/task_sqlite.dart';
-import 'image_to_text_screen.dart';
-import 'speech_to_text.dart';
 
 // ignore_for_file: use_build_context_synchronously
 
@@ -212,119 +209,15 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: const Color(0xff734a34),
         onPressed: () {
-          showDialog(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) {
-              return Center(
-                child: Material(
-                  color: Colors.transparent,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                  ),
-                  child: SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.8,
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: AlertDialog(
-                      title: const Center(
-                        child: Text(
-                          'Tasks',
-                        ),
-                      ),
-                      content: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          MaterialButton(
-                            elevation: 5,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            colorBrightness: Brightness.dark,
-                            splashColor: Colors.white12,
-                            animationDuration:
-                                const Duration(milliseconds: 500),
-                            textColor: Colors.white,
-                            color: const Color(0xff734a34),
-                            child: const FittedBox(
-                                fit: BoxFit.contain,
-                                child: Text('Add Task With Text')),
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) =>
-                                          const AddTaskScreen())).then((value) {
-                                if (value) {
-                                  refresh();
-                                  Navigator.of(context).pop(true);
-                                }
-                              });
-                            },
-                          ),
-                          const SizedBox(
-                            height: 10,
-                          ),
-                          MaterialButton(
-                            elevation: 5,
-                            clipBehavior: Clip.antiAliasWithSaveLayer,
-                            colorBrightness: Brightness.dark,
-                            splashColor: Colors.white12,
-                            animationDuration:
-                                const Duration(milliseconds: 500),
-                            textColor: Colors.white,
-                            color: const Color(0xff734a34),
-                            child: const FittedBox(
-                                fit: BoxFit.contain,
-                                child: Text('Add Task With Voice')),
-                            onPressed: () async {
-                              Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const SpeechToTextToDoScreen()))
-                                  .then((value) {
-                                if (value) {
-                                  refresh();
-                                  Navigator.of(context).pop(true);
-                                }
-                              });
-                            },
-                          ),
-                            const SizedBox(
-                                                      height: 10,
-                                                    ),
-                                                    MaterialButton(
-                                                      elevation: 5,
-                                                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                                                      colorBrightness: Brightness.dark,
-                                                      splashColor: Colors.white12,
-                                                      animationDuration:
-                                                          const Duration(milliseconds: 500),
-                                                      textColor: Colors.white,
-                                                      color: const Color(0xff734a34),
-                                                      child: const FittedBox(
-                                                          fit: BoxFit.contain,
-                                                          child: Text('Add Task With Image To Text')),
-                                                      onPressed: () async {
-                                                        Navigator.push(
-                                                                context,
-                                                                MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        const ImageToTextTasksScreen()))
-                                                            .then((value) {
-                                                          if (value) {
-                                                            refresh();
-                                                            Navigator.of(context).pop(true);
-                                                          }
-                                                        });
-                                                      },
-                                                    ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              );
-            },
-          );
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => const AddTaskScreen())).then((value) {
+            if (value) {
+              refresh();
+              Navigator.of(context).pop(true);
+            }
+          });
         },
         child: const Icon(
           Icons.add,

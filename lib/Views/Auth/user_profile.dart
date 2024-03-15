@@ -21,7 +21,7 @@ class Profile extends StatelessWidget {
                 backgroundColor: primaryColor,
                 radius: 77,
                 child: CircleAvatar(
-                  backgroundImage: AssetImage("assets/no_user.jpg"),
+                  backgroundImage: AssetImage("assets/user1.png"),
                   radius: 75,
                 ),
               ),

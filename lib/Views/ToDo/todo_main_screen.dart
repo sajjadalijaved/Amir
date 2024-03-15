@@ -215,7 +215,6 @@ class _ToDoMainScreenState extends State<ToDoMainScreen> {
                   builder: (context) => const AddTaskScreen())).then((value) {
             if (value) {
               refresh();
-              Navigator.of(context).pop(true);
             }
           });
         },

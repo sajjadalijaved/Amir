@@ -34,11 +34,11 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Add Task'),
-         leading: InkWell(
-                onTap: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Icon(Icons.arrow_back)),
+        leading: InkWell(
+            onTap: () {
+              Navigator.of(context).pop();
+            },
+            child: const Icon(Icons.arrow_back)),
       ),
       body: Form(
         key: key,
@@ -110,7 +110,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                                   taskTitle: title,
                                   createdAt: DateTime.now().toIso8601String()))
                               .whenComplete(() {
-                            Navigator.of(context).pop();
+                            Navigator.of(context).pop(true);
                           });
                           ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(

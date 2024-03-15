@@ -12,7 +12,7 @@ import 'Auth/user_profile.dart';
 
 class MainScreen extends StatefulWidget {
   String userName;
-   MainScreen({super.key,required this.userName});
+  MainScreen({super.key, required this.userName});
 
   @override
   State<MainScreen> createState() => _MainScreenState();
@@ -21,6 +21,7 @@ class MainScreen extends StatefulWidget {
 class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
   late PageController _pageController;
   late DatabaseHelper helper;
+
   int currentIndex = 0;
   List<String> name = [
     "Notes",
@@ -154,8 +155,10 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
                       });
                     },
                     controller: _pageController,
-                    children:  [
-                      NotesScreen(username: widget.userName.toString() ,),
+                    children: [
+                      NotesScreen(
+                        username: widget.userName.toString(),
+                      ),
                       const ToDoMainScreen(),
                     ]),
               )

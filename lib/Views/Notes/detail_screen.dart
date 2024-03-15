@@ -1,6 +1,5 @@
 import 'dart:developer';
 import 'package:note_app/Views/main_screen.dart';
-
 import '../../JsonModels/note_model.dart';
 import '../../SQLite/sqlite.dart';
 import '../../Custom/constant.dart';

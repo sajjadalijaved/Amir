@@ -94,7 +94,7 @@ class _NotesScreenState extends State<NotesScreen> {
                 future: notes,
                 builder: (context, AsyncSnapshot<List<NoteModel>> snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const CircularProgressIndicator();
+                    return const Center(child: CircularProgressIndicator());
                   } else if (snapshot.hasData && snapshot.data!.isEmpty) {
                     return const Center(child: Text("No Notes Avaible"));
                   } else if (snapshot.hasError) {
